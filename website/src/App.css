@@ -890,17 +890,21 @@
 
 .faq-assistant-panel {
   position: fixed;
+  top: 100px;
   bottom: 120px;
-  right: 30px;
+  right: 24px;
   background: var(--white);
   width: 420px;
-  height: 600px;
+  max-width: min(420px, calc(100vw - 48px));
+  height: auto;
+  max-height: calc(100vh - 220px);
   border-radius: 24px;
   box-shadow: 0 10px 40px rgba(15, 0, 30, 0.15);
   border: 1px solid rgba(212, 175, 55, 0.3);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  overflow-x: hidden;
   pointer-events: auto; /* Popup: pointer-events: auto */
   transform: translateY(20px) scale(0.95);
   opacity: 0;
@@ -1091,22 +1095,47 @@
 
 .faq-onboarding-actions {
   display: flex;
-  gap: 12px;
+  gap: 16px;
   margin-top: 8px;
 }
 
 .faq-onboarding-btn-primary {
   flex: 1;
-  height: 48px;
+  height: 52px;
+  min-width: 220px;
+  padding: 0 28px;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 16px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
 }
 
 .faq-onboarding-btn-secondary {
   flex: 1;
-  height: 48px;
+  height: 52px;
+  min-width: 220px;
+  padding: 0 28px;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 16px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+  color: #3B0A57;
+  background: var(--white);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.faq-onboarding-btn-secondary:hover {
+  background: #F8F6FB;
 }
 
 /* Chat Feed Area */
@@ -1401,21 +1430,42 @@
   max-height: 0px;
 }
 
+/* Tablet Responsiveness */
+@media (max-width: 992px) and (min-width: 769px) {
+  .faq-assistant-panel {
+    width: 80vw;
+    max-width: 80vw;
+    right: 24px;
+  }
+}
+
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .faq-assistant-panel {
     width: 95vw;
+    max-width: 95vw;
     height: 85vh;
+    top: auto;
     bottom: 24px;
     right: 2.5vw;
     left: 2.5vw;
-    max-width: none;
     max-height: none;
   }
 
   .faq-welcome-list {
     grid-template-columns: 1fr;
     gap: 4px;
+  }
+
+  .faq-onboarding-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .faq-onboarding-btn-primary,
+  .faq-onboarding-btn-secondary {
+    width: 100%;
+    min-width: unset;
   }
 }
 
