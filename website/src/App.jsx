@@ -1,79 +1,400 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Crown, Star, Calendar, MapPin, CheckCircle2, Phone, Mail, MessageCircle, ChevronRight, ChevronLeft, Award, Camera, TrendingUp, X, Tag, Globe, Sparkles } from 'lucide-react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { Crown, Star, CheckCircle2, Phone, Mail, MessageCircle, ChevronRight, X, Award, Sparkles, Search, Globe, Minus, Headphones } from 'lucide-react';
 import './App.css';
 
-import smallbanner from './smallbanner.jpeg';
-import virtus from './virtus.jfif';
-import heroBackground from './Landingpage011.jpg';
+import Home from './pages/Home';
+import RegistrationProcess from './pages/RegistrationProcess';
+import EligibilityCriteria from './pages/EligibilityCriteria';
+import AgeLimit from './pages/AgeLimit';
+import AuditionProcess from './pages/AuditionProcess';
 
-import SelfieCamera from './components/SelfieCamera';
-
-const galleryImages = [
-  "https://ik.imagekit.io/ew7ar5inl/src/Gallery01%20(1).JPG?updatedAt=1781678565453",
-  "https://ik.imagekit.io/ew7ar5inl/src/Gallery01%20(7).JPG?updatedAt=1781678556811",
-  "https://ik.imagekit.io/ew7ar5inl/src/Gallery01%20(4).JPG?updatedAt=1781678520234",
-  "https://ik.imagekit.io/ew7ar5inl/src/Gallery01%20(3).JPG?updatedAt=1781678177543",
-  "https://ik.imagekit.io/ew7ar5inl/src/Gallery01%20(5).JPG?updatedAt=1781678177602",
-  "https://ik.imagekit.io/ew7ar5inl/src/smallbanner.jpeg?updatedAt=1781678137070",
-  "https://ik.imagekit.io/ew7ar5inl/src/Gallery01%20(3).jpeg?updatedAt=1781678137064",
-  "https://ik.imagekit.io/ew7ar5inl/src/Gallery01%20(8).jpeg?updatedAt=1781678134824",
-  "https://ik.imagekit.io/ew7ar5inl/src/Gallery01%20(10).jpeg?updatedAt=1781678134762",
-  "https://ik.imagekit.io/ew7ar5inl/src/Gallery01%20(9).jpeg?updatedAt=1781678134330"
+const faqs = [
+  {
+    q: "How can I register for Miss Bharat™ 2026?",
+    a: (
+      <span>
+        To begin your exciting journey, you can easily register for Miss Bharat™ 2026 by visiting our official digital portal. The Miss Bharat Registration process is fully streamlined online to ensure ease of access for young women across India. Start by visiting our dedicated page at <a href="/registration-process" style={{ color: 'var(--gold-dark)', textDecoration: 'underline' }}>/registration-process</a> to fill out the online application form with your personal details, achievements, and future goals. You will also need to upload high-quality photographs matching our official submission guidelines. This Miss Bharat Application Process is specifically designed to identify promising talent and celebrate individuality. Once you submit your details, our expert selection committee will review your profile and update you on your status via email. Please make sure that all the details entered are accurate and correct to avoid any delays in processing your application. We are looking forward to seeing your submission and welcoming you.
+      </span>
+    )
+  },
+  {
+    q: "What is the age limit for Miss Bharat™ 2026?",
+    a: (
+      <span>
+        The official age limit to participate in Miss Bharat™ 2026 is between 16 and 28 years old at the time of your application. This wide range ensures that both young aspirants and mature individuals have a fair platform to showcase their personality. For detailed instructions regarding age verification and category divisions, you can check the <a href="/age-limit" style={{ color: 'var(--gold-dark)', textDecoration: 'underline' }}>/age-limit</a> guidelines on our website. Please note that you must provide valid proof of age, such as an Aadhaar Card or Passport, during the onboarding stage. Whether you are a college student or a working professional, if you fall in this bracket, we encourage you to apply. If you are under 18, you will need parent or guardian consent to register. This ensures we comply with all legal requirements and maintain safety for our younger participants throughout the pageant.
+      </span>
+    )
+  },
+  {
+    q: "Who is eligible to participate in Miss Bharat™ 2026?",
+    a: (
+      <span>
+        To check who is eligible to participate, you must review the official Miss Bharat Eligibility criteria. The pageant is open to Indian citizens, NRI, and OCI cardholders who identify as female and fall within the 16 to 28 age range. Unlike other pageants, we do not impose strict height, weight, or marital status restrictions to ensure maximum inclusivity for all candidates. You can view the comprehensive checklist of requirements at <a href="/eligibility-criteria" style={{ color: 'var(--gold-dark)', textDecoration: 'underline' }}>/eligibility-criteria</a> to verify your eligibility. This national beauty pageant India aims to provide a welcoming platform for women from diverse cultural, academic, and professional backgrounds to showcase their talent and leadership. If you are passionate about personal growth, social impact, and representing modern India, you are highly encouraged to apply today. Your background, heritage, and unique journey are valuable additions to our stage.
+      </span>
+    )
+  },
+  {
+    q: "Is prior modelling experience required?",
+    a: (
+      <span>
+        No, prior modeling experience is absolutely not required to apply for Miss Bharat™ 2026. This national beauty pageant India prides itself on discovering fresh talent, freshers, and raw potential. We welcome beginners from all backgrounds who have the passion and confidence to learn. Every selected participant receives extensive professional training, ramp walk choreography, and grooming from top industry experts to prepare them for the national stage. If you meet the basic Miss Bharat Eligibility criteria, you are fully encouraged to complete your Beauty Pageant Registration India without worrying about your past experience in the fashion industry. We value confidence, personality, and intelligence above all else. This platform is designed to help you build those skills from scratch and succeed in your modeling journey. We look forward to helping you grow.
+      </span>
+    )
+  },
+  {
+    q: "Is the audition process online or offline?",
+    a: (
+      <span>
+        The initial rounds of the Miss Bharat Audition are conducted online to allow contestants from all parts of India to participate comfortably from their homes. For a detailed breakdown of the digital and physical stages, please visit our page at <a href="/audition-process" style={{ color: 'var(--gold-dark)', textDecoration: 'underline' }}>/audition-process</a>. If you pass the virtual round, the subsequent training, grooming, and state-level evaluations may feature hybrid formats. The grand national finale is held offline as a live event in New Delhi. This hybrid approach ensures safety, accessibility, and high standards, helping us evaluate your overall confidence, speech, and runway walk through multiple interactive steps. Detailed schedules and links for the online meetings will be emailed to you once your registration details are successfully verified. This ensures you have ample time to prepare your setup.
+      </span>
+    )
+  },
+  {
+    q: "What documents are required?",
+    a: (
+      <span>
+        To participate in Miss Bharat™ 2026, you will need to submit standard identification and residency documents for verification. The key required documents include proof of age and nationality, such as your Aadhaar Card, Passport, or Birth Certificate. Additionally, you will need to provide your academic certificates, proof of state residency, and a professional portfolio if available. These records must be uploaded during the online Miss Bharat Application Process. Rest assured, all submitted documents are kept strictly confidential and secure. Having these documents ready beforehand will ensure a smooth verification process when you progress through the state and national rounds. We want to make sure your journey is as smooth and successful as possible, so please ensure that scan quality is high and readable.
+      </span>
+    )
+  },
+  {
+    q: "Is there a registration fee?",
+    a: (
+      <span>
+        Yes, the initial registration fee for the Miss Bharat™ 2026 beauty pageant registration India is ₹999 only. This fee covers the cost of processing your application, virtual audition review, and initial assessment. Unlike other pageants, Miss Bharat maintains complete financial transparency, and there are absolutely no hidden charges, grooming fees, or unexpected costs later in the journey. This fee helps us maintain high standards of evaluation and select the most dedicated contestants for our professional grooming sessions. Please complete your registration on our official portal using the secure payment gateway provided. A digital receipt will be emailed immediately to confirm your successful payment. It is highly recommended to complete this step as soon as possible to officially secure your audition slot and receive the preparatory training materials.
+      </span>
+    )
+  },
+  {
+    q: "What prizes do winners receive?",
+    a: (
+      <span>
+        The winners of Miss Bharat™ 2026 receive an array of grand prizes designed to launch their careers in fashion and media. The headline first prize for the crowned winner of the Miss Bharat Award 2026 is a premium Volkswagen Virtus sedan. In addition to this premium vehicle, winners and runners-up receive substantial cash rewards, official crowns, designer trophies, and exclusive brand endorsement contracts. Finalists also benefit from guaranteed media exposure in leading publications and direct introductions to top modeling agencies, opening doors to acting, modeling, and elite influencer opportunities across the country. The total value of these awards is completely unmatched in the industry, offering a truly massive launchpad for your career goals, personal brand building, and long-term professional development in fashion.
+      </span>
+    )
+  },
+  {
+    q: "Will participants receive certificates?",
+    a: (
+      <span>
+        Yes, all participants who register and successfully take part in the Miss Bharat Audition rounds will receive official digital participation certificates. These certificates serve as prestigious recognition of your effort, talent, and commitment to self-development. For the contestants who qualify for the state-level and national finale, we provide special physical merit certificates and trophies. Earning a certificate from a recognized national beauty pageant India adds immense value to your professional portfolio, highlighting your communication skills, public speaking confidence, and grooming achievements to potential agencies and employers. These credentials are verifiable, signed by our directors, and mailed directly to your address. These official credentials serve as a lasting testament to your hard work, dedication, and personal growth throughout this national competition, helping you stand out in future endeavors.
+      </span>
+    )
+  },
+  {
+    q: "How can I contact the Miss Bharat™ team?",
+    a: (
+      <span>
+        We are always here to help and guide you through your pageantry journey. You can contact the Miss Bharat™ 2026 support team directly through our official WhatsApp hotline at +91 83407 14813. For calling support, you can reach out to our team at +91 75629 31180. Additionally, you can send detailed inquiries via email to missbharat@indiaonematrimony.com. Our support desk operates from Monday to Saturday, helping candidates with queries regarding the Miss Bharat Registration process, document submissions, audition scheduling, and general eligibility. Please feel free to reach out to our team at any time, and we will make sure to reply promptly to ensure your application goes smoothly, all your queries are resolved, and you feel completely supported throughout your journey.
+      </span>
+    )
+  },
+  {
+    q: "What should I prepare for the Talent Round in the Miss Bharat Award?",
+    a: (
+      <span>
+        The Talent Round is a vital segment of the Miss Bharat Award 2026, allowing you to showcase your unique capabilities and creativity. You are free to choose any skill that represents your individuality, such as classical or modern dance, singing, public speaking, acting, painting, or playing a musical instrument. You should prepare a performance that is between 1.5 to 2 minutes long. Focus on stage presence, originality, and self-confidence. Since the initial talent evaluations may happen during the online audition, ensure you have a clean, quiet space to record your video. Our judges look for passion, dedication, and how well you connect with the audience. This is your chance to shine and show who you are beyond the runway, showing your true depth.
+      </span>
+    )
+  },
+  {
+    q: "What are the core judging criteria for the national beauty pageant India?",
+    a: (
+      <span>
+        Our judging panel evaluates contestants on a holistic set of criteria to find the true ambassadors of modern India. In this national beauty pageant India, candidates are judged on their communication skills, confidence, talent, intelligence, and grace. We focus heavily on your unique story, social awareness, and leadership qualities rather than just physical appearance or height. During the final rounds, your performance on the runway, response to the question-and-answer session, and overall attitude during the training and grooming workshops will also play a key role in deciding the winners. We value honesty, intelligence, positive mindset, and cultural representation above everything else in our candidates, ensuring the crown goes to a well-rounded leader who represents modern India with pride and dignity.
+      </span>
+    )
+  },
+  {
+    q: "What are the long-term winner benefits of winning the Miss Bharat Award?",
+    a: (
+      <span>
+        Winning the Miss Bharat Award comes with extensive long-term professional benefits. The crowned winner becomes the national brand ambassador for the pageant, leading various social impact campaigns and public events. The winner gains massive media exposure through press conferences, magazine covers, and digital media feature stories. Additionally, we provide direct casting introductions for modeling, television, and film industries. The title serves as a life-changing launchpad, helping you build a personal brand, network with elite fashion designers, and establish a successful career as an influential role model in India. This title remains a lifetime achievement that opens endless professional doors and creates countless business opportunities, leading to immense personal growth, premium brand partnerships, and sustainable career success in fashion. Our team continues to support our alumni long after their reign ends.
+      </span>
+    )
+  },
+  {
+    q: "Are travel and accommodation expenses covered for the national finale in Delhi?",
+    a: (
+      <span>
+        Yes, for the final rounds in Delhi, Miss Bharat™ provides comfortable accommodation, local transport, and meals for all the national finalists during the official pageant week. We arrange premium hotel stays where contestants can rest, practice, and attend grooming sessions safely. While candidates are responsible for their initial travel to the host city, all internal arrangements, venue transfers, and event hospitality are fully managed by our organizing team. We ensure that our finalists can focus entirely on their preparation, interviews, and runway walks without any logistical stress. The safety, health, and comfort of finalists is our top priority. We promise a world-class experience, premium hospitality, and a supportive environment for everyone who makes it to the final stage of this national event in New Delhi.
+      </span>
+    )
+  },
+  {
+    q: "How does the pageant guarantee safety and transparency for all candidates?",
+    a: (
+      <span>
+        Safety, dignity, and transparency are our highest priorities. Miss Bharat is an MSME-registered national beauty pageant India with applied trademarks, operating under strict ethical guidelines. All audition results, selection criteria, and fees are clearly communicated without hidden costs. During the offline finale week in New Delhi, we provide round-the-clock security, female chaperones, and professional coordinators to ensure a safe environment for all female contestants. Parents and guardians are kept informed about scheduling, guidelines, and safety protocols, making the Miss Bharat Application Process a trusted platform for aspiring models. Your trust, security, and safety are extremely important to us, and we take this responsibility very seriously at every single stage of this national pageantry competition. We ensure a secure, respectful, and encouraging atmosphere for all.
+      </span>
+    )
+  },
+  {
+    q: "What are the specific guidelines and rules for photo submissions?",
+    a: (
+      <span>
+        To ensure your application is reviewed successfully, please follow these simple photo submission guidelines. Submit three clear, high-resolution photographs: a headshot (face focus), a mid-shot (waist up), and a full-body shot. The images should be taken in natural daylight or a well-lit room against a plain, neutral background. Avoid using heavy beauty filters, sunglasses, hats, or digital edits. Wear clean, simple clothing like a basic t-shirt and jeans to showcase your natural features. High-quality and realistic photos significantly speed up your evaluation during the Miss Bharat Registration process. Make sure all the uploaded files are not blurry, heavily edited, or digitally modified in any way before submitting them, as this helps our judges see your raw potential and natural features clearly.
+      </span>
+    )
+  },
+  {
+    q: "What are the major rules and regulations that participants must adhere to?",
+    a: (
+      <span>
+        All participants of Miss Bharat 2026 must adhere to our official code of conduct to maintain the pageant's integrity. Contestants must provide accurate personal information and documents during registration. Punctuality during all online auditions and grooming sessions is mandatory. Any form of indiscipline, harassment, or negative behavior towards fellow contestants, mentors, or staff will result in immediate disqualification. Candidates must also respect the decision of the judging panel, which is final and binding. Following these rules ensures a positive, supportive, and professional environment for everyone involved. Integrity, discipline, and respect are key pillars of success in this pageant, and our team expects high standards of conduct from all future applicants who seek to win this prestigious crown. Compliance with these rules is essential for participation.
+      </span>
+    )
+  },
+  {
+    q: "What is the refund policy for registration or audition related fees?",
+    a: (
+      <span>
+        The Miss Bharat Registration fee of ₹999 is strictly non-refundable and non-transferable under any circumstances. This fee is immediately allocated toward processing your digital application, verifying your submitted documents, and scheduling your virtual Miss Bharat Audition. We strongly advise all candidates to carefully review the eligibility criteria, terms and conditions, and age limit before making the payment. If you have any questions or experience technical errors during the payment process, please contact our support team immediately before attempting any multiple transactions on our portal. We appreciate your cooperation, patience, and understanding in this matter. Thank you for your interest and active support in joining our national beauty pageant, and we wish you the very best of luck with your audition process.
+      </span>
+    )
+  },
+  {
+    q: "How can I verify the authenticity of my Miss Bharat Registration?",
+    a: (
+      <span>
+        Once you complete your registration, you will receive an official confirmation email containing your unique application ID and receipt. This registration confirmation serves as proof of your entry. You can verify your status at any time by contacting our helpline or writing to our official email address. Miss Bharat™ is a transparent, MSME-registered national beauty pageant India. We advise contestants to avoid third-party agents or unverified websites claiming to represent us. Official communication regarding auditions, scheduling, and selection will only come from our verified email domain and contact numbers. Stay alert, safe, and secure at all times during the registration phase, and always check our website for authentic news updates, official announcements, and verified program details. If you suspect any fraudulent activity, please report it to us immediately.
+      </span>
+    )
+  },
+  {
+    q: "What happens if I miss my scheduled Miss Bharat Audition slot?",
+    a: (
+      <span>
+        We understand that emergencies or scheduling conflicts can occur. If you are unable to attend your assigned virtual Miss Bharat Audition slot, you must inform our support team at least 24 hours in advance. You can request a reschedule by sending an email with your application ID to our support desk. Rescheduling is subject to slot availability and the judges' discretion. If you fail to notify us and miss the slot, your application may be cancelled without a refund. We try our best to accommodate genuine cases where communication is clear, timely, and sent through proper channels. Your prompt and clear communication will help our organizing team reschedule and manage your audition session smoothly, efficiently, and fairly for all participating candidates.
+      </span>
+    )
+  }
 ];
 
-function App() {
+const bubbleMessages = [
+  "👋 Need any help?",
+  "💬 Ask me anything about Miss Bharat.",
+  "📄 Need registration help?",
+  "🎯 Check eligibility instantly.",
+  "🎤 Know about auditions.",
+  "🏆 Explore prizes and benefits.",
+  "📑 Required documents?"
+];
+
+function AppContent() {
   const applyLink = "https://indiaonematrimony.com/missbharat/apply";
+  const location = useLocation();
 
+  const [isAssistantOpen, setIsAssistantOpen] = useState(false);
+  const [selectedFaqIndex, setSelectedFaqIndex] = useState(() => {
+    const saved = sessionStorage.getItem('miss_faq_selected_index');
+    return saved !== null ? parseInt(saved, 10) : null;
+  });
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [viewMode, setViewMode] = useState(() => {
+    const savedMode = sessionStorage.getItem('miss_faq_view_mode');
+    if (savedMode) return savedMode;
+    const onboardingShown = sessionStorage.getItem('miss_faq_onboarding_shown') === 'true';
+    return onboardingShown ? 'chat' : 'onboarding';
+  });
+  const [isTyping, setIsTyping] = useState(false);
+  const [isFaqAnswerTyping, setIsFaqAnswerTyping] = useState(false);
 
+  // Unread badge state: "3 Popular Questions"
+  const [badgeVisible, setBadgeVisible] = useState(() => {
+    return sessionStorage.getItem('miss_faq_badge_hidden') !== 'true';
+  });
 
+  // Idle and hover tooltip states
+  const [isIdleTooltipVisible, setIsIdleTooltipVisible] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
+  // Typing bubble states and rotation messages
+  const [bubbleIndex, setBubbleIndex] = useState(0);
+  const [bubbleState, setBubbleState] = useState('typing'); // 'typing' | 'message' | 'fadeout'
 
-  const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [isSelfieOpen, setIsSelfieOpen] = useState(false);
+  // Reset typing bubble state to typing when popup opens or closes to reset animation properly
+  useEffect(() => {
+    setBubbleState('typing');
+  }, [isAssistantOpen]);
 
-  const openLightbox = (index) => {
-    setSelectedImageIndex(index);
-    setLightboxOpen(true);
-    document.body.style.overflow = 'hidden';
-  };
+  // Typing bubble rotation timer logic
+  useEffect(() => {
+    if (isAssistantOpen) {
+      return;
+    }
 
-  const closeLightbox = () => {
-    setLightboxOpen(false);
-    document.body.style.overflow = 'auto';
-  };
+    if (isHovered) {
+      if (bubbleState !== 'message') {
+        setBubbleState('message');
+      }
+      return;
+    }
 
-  const nextLightboxImage = (e) => {
-    if (e) e.stopPropagation();
-    setSelectedImageIndex((prev) => (prev + 1) % galleryImages.length);
-  };
+    let timer;
+    if (bubbleState === 'typing') {
+      timer = setTimeout(() => {
+        setBubbleState('message');
+      }, 1500);
+    } else if (bubbleState === 'message') {
+      timer = setTimeout(() => {
+        setBubbleState('fadeout');
+      }, 4000);
+    } else if (bubbleState === 'fadeout') {
+      timer = setTimeout(() => {
+        setBubbleIndex((prev) => (prev + 1) % bubbleMessages.length);
+        setBubbleState('typing');
+      }, 500);
+    }
 
-  const prevLightboxImage = (e) => {
-    if (e) e.stopPropagation();
-    setSelectedImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
-  };
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [bubbleState, bubbleIndex, isHovered, isAssistantOpen]);
 
+  const panelRef = useRef(null);
+  const dropdownRef = useRef(null);
+  const chatFeedRef = useRef(null);
+  const idleTimerRef = useRef(null);
+  const hideTimerRef = useRef(null);
+  const typingTimeoutRef = useRef(null);
+
+  // Idle timer: 10s delay, 6s auto-hide on route change or when assistant is closed
+  useEffect(() => {
+    setIsIdleTooltipVisible(false);
+    if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+    if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+
+    if (!isAssistantOpen) {
+      idleTimerRef.current = setTimeout(() => {
+        setIsIdleTooltipVisible(true);
+        hideTimerRef.current = setTimeout(() => {
+          setIsIdleTooltipVisible(false);
+        }, 6000);
+      }, 10000);
+    }
+
+    return () => {
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+    };
+  }, [location.pathname, isAssistantOpen]);
+
+  // Esc key closure listener
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (!lightboxOpen) return;
-      if (e.key === 'Escape') closeLightbox();
-      if (e.key === 'ArrowRight') nextLightboxImage();
-      if (e.key === 'ArrowLeft') prevLightboxImage();
+      if (e.key === 'Escape') {
+        handleCloseAssistant();
+        setIsDropdownOpen(false);
+      }
     };
-    window.addEventListener('keydown', handleKeyDown);
+    if (isAssistantOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lightboxOpen]);
+  }, [isAssistantOpen]);
 
+  // Click outside closure listener
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      // Don't close if clicking on the launcher itself or its elements
+      if (e.target.closest('.faq-floating-avatar')) {
+        return;
+      }
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setIsDropdownOpen(false);
+      }
+      if (isAssistantOpen && panelRef.current && !panelRef.current.contains(e.target)) {
+        handleCloseAssistant();
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isAssistantOpen]);
 
+  // Auto-scroll chat feed
+  useEffect(() => {
+    if (chatFeedRef.current) {
+      chatFeedRef.current.scrollTop = chatFeedRef.current.scrollHeight;
+    }
+  }, [selectedFaqIndex, isFaqAnswerTyping]);
 
+  // Unified popup opening handler
+  const handleOpenAssistant = () => {
+    console.log("Popup opened");
+    setIsAssistantOpen(true);
+    
+    // Hide unread badge and stop idle timers
+    setBadgeVisible(false);
+    sessionStorage.setItem('miss_faq_badge_hidden', 'true');
+    setIsIdleTooltipVisible(false);
+    if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+    if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
 
+    const onboardingShown = sessionStorage.getItem('miss_faq_onboarding_shown') === 'true';
+    if (!onboardingShown) {
+      // Welcome bubble once per session
+      setViewMode('onboarding');
+      setIsTyping(true);
+      setSelectedFaqIndex(null);
+      setSearchQuery("");
+      setIsDropdownOpen(false);
+      
+      setTimeout(() => {
+        setIsTyping(false);
+        sessionStorage.setItem('miss_faq_onboarding_shown', 'true');
+        sessionStorage.setItem('miss_faq_view_mode', 'onboarding');
+      }, 800);
+    } else {
+      // Subsequent opens in the session go straight to the last active screen
+      const savedMode = sessionStorage.getItem('miss_faq_view_mode') || 'chat';
+      setViewMode(savedMode);
+      setIsDropdownOpen(false);
+    }
+  };
+
+  // Close handler for FAQ assistant
+  const handleCloseAssistant = () => {
+    console.log("Popup closed");
+    setIsAssistantOpen(false);
+  };
+
+  // Click handler for assistant launcher circular icon
+  const handleLauncherClick = (e) => {
+    if (e) {
+      e.stopPropagation();
+    }
+    console.log("Launcher clicked");
+    handleOpenAssistant();
+  };
+
+  // FAQ item select handler with typing indicator simulation
+  const handleSelectFaq = (index) => {
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+    
+    setSelectedFaqIndex(index);
+    sessionStorage.setItem('miss_faq_selected_index', index);
+    setViewMode('chat');
+    sessionStorage.setItem('miss_faq_view_mode', 'chat');
+    setIsDropdownOpen(false);
+    
+    setIsFaqAnswerTyping(true);
+    typingTimeoutRef.current = setTimeout(() => {
+      setIsFaqAnswerTyping(false);
+      typingTimeoutRef.current = null;
+    }, 800);
+  };
 
   return (
     <>
       {/* Navbar */}
       <nav className="navbar">
         <div className="container">
-          <a href="#" className="nav-logo">
+          <a href="/" className="nav-logo">
             <img 
               src="/logo.png" 
               alt="Miss Bharat Official Logo" 
@@ -82,426 +403,361 @@ function App() {
             <span className="brand-text">Miss Bharat™</span>
           </a>
           <div className="nav-links">
-            <a href="#about">About</a>
-            <a href="#prizes">Prizes</a>
-            <a href="#eligibility">Eligibility</a>
-            <a href="#contact">Contact</a>
+            <a href="/#about">About</a>
+            <a href="/#prizes">Prizes</a>
+            <a href="/#eligibility">Eligibility</a>
+            <a href="/#contact">Contact</a>
             <a href={applyLink} className="btn btn-primary nav-cta">Apply Now</a>
           </div>
         </div>
       </nav>
 
-      {/* Ultra-Premium Cinematic Hero Section */}
-      <section className="hero-premium" style={{ backgroundImage: `url(${heroBackground})` }}>
+      {/* Routes */}
+      <Routes>
+        <Route path="/" element={<Home handleOpenAssistant={handleOpenAssistant} />} />
+        <Route path="/registration-process" element={<RegistrationProcess />} />
+        <Route path="/eligibility-criteria" element={<EligibilityCriteria />} />
+        <Route path="/age-limit" element={<AgeLimit />} />
+        <Route path="/audition-process" element={<AuditionProcess />} />
+      </Routes>
 
-        <div className="hero-layout container">
-          {/* Left Side: Content */}
-          <div className="hero-text-content">
-            <h1 className="premium-heading animate-slide-up-delay-1" style={{ fontSize: 'clamp(2rem, 3.2vw, 2.8rem)', lineHeight: '1.2' }}>
-              <span className="heading-white" style={{ fontSize: 'clamp(1.6rem, 2.5vw, 2.2rem)', textTransform: 'none', display: 'block' }}>
-                Miss Bharat™ 2026
-              </span>
-              <span className="heading-gold" style={{ fontSize: 'clamp(1.8rem, 3.5vw, 3.2rem)', textTransform: 'none', display: 'block', lineHeight: '1.1', marginTop: '5px' }}>
-                India's Prestigious National Beauty Pageant
-              </span>
-            </h1>
+      {/* Floating circular assistant button launcher and interactive typing bubble */}
+      {!isAssistantOpen && (
+        <div className="faq-launcher-container">
+          {/* Aside Typing Bubble */}
+          <div 
+            className={`faq-typing-bubble-aside ${bubbleState}`}
+            onClick={handleLauncherClick}
+            style={{ pointerEvents: 'auto' }}
+          >
+            {bubbleState === 'typing' ? (
+              <div className="faq-bubble-dots">
+                <span className="faq-bubble-dot"></span>
+                <span className="faq-bubble-dot"></span>
+                <span className="faq-bubble-dot"></span>
+              </div>
+            ) : (
+              <span className="faq-bubble-message">{bubbleMessages[bubbleIndex]}</span>
+            )}
+          </div>
+
+          <button 
+            className="faq-floating-avatar"
+            onClick={handleLauncherClick}
+            onMouseDown={(e) => {
+              e.stopPropagation();
+            }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            aria-label="Open Miss Bharat FAQ Assistant"
+          >
+            <img 
+              src="/ai-avatar.png" 
+              alt="Miss Bharat AI Concierge" 
+              className="faq-floating-avatar-img"
+            />
             
-            <h2 className="animate-fade-in-delay-2" style={{ color: '#E2D0ED', fontSize: '1.25rem', fontWeight: '500', marginBottom: '20px', textTransform: 'none', fontFamily: 'var(--font-body)', lineHeight: '1.4' }}>
-              Register for Miss Bharat™ 2026 | Beauty, Talent, Confidence & National Recognition
-            </h2>
-
-            <div className="heading-divider animate-fade-in-delay-2">
-              <div className="divider-line"></div>
-              <Crown size={24} className="divider-icon text-gold" />
-              <div className="divider-line"></div>
-            </div>
-
-            <p className="hero-subtext animate-slide-up-delay-2">
-              Miss Bharat™ 2026 is one of India's prestigious national beauty pageants that empowers women through talent, confidence, grooming, personality development and national-level exposure. Participate in virtual auditions, state-level competitions and the grand national finale in Delhi. Build your confidence, showcase your talent and unlock opportunities in fashion, media and entertainment.
-            </p>
-
-            <div className="hero-actions animate-slide-up-delay-3">
-              <a href={applyLink} className="btn-premium-solid">
-                Apply Now <ChevronRight size={20} />
-              </a>
-              <a href="#about" className="btn-premium-outline">
-                Explore The Journey <ChevronRight size={20} />
-              </a>
-            </div>
-
-            {/* Benefit Highlights */}
-            <div className="hero-benefits animate-fade-in-delay-4 grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 bg-purple-950/20 backdrop-blur-md p-5 rounded-2xl border border-amber-500/10 w-full">
-              <div className="benefit-item flex items-start gap-3">
-                <Tag className="benefit-icon text-amber-400 shrink-0" size={24} />
-                <div className="benefit-text">
-                  <span className="b-title text-white font-bold text-sm block">Free Registration</span>
-                  <span className="b-desc text-amber-500/80 text-xs block">100% Free Entry</span>
-                </div>
-              </div>
-
-              <div className="benefit-item flex items-start gap-3">
-                <Globe className="benefit-icon text-amber-400 shrink-0" size={24} />
-                <div className="benefit-text">
-                  <span className="b-title text-white font-bold text-sm block">National Level</span>
-                  <span className="b-desc text-amber-500/80 text-xs block">Competition</span>
-                </div>
-              </div>
-
-              <div className="benefit-item flex items-start gap-3">
-                <Sparkles className="benefit-icon text-amber-400 shrink-0" size={24} />
-                <div className="benefit-text">
-                  <span className="b-title text-white font-bold text-sm block">Professional</span>
-                  <span className="b-desc text-amber-500/80 text-xs block">Grooming</span>
-                </div>
-              </div>
-
-              <div className="benefit-item flex items-start gap-3">
-                <Star className="benefit-icon text-amber-400 shrink-0" size={24} />
-                <div className="benefit-text">
-                  <span className="b-title text-white font-bold text-sm block">Celebrity</span>
-                  <span className="b-desc text-amber-500/80 text-xs block">Mentorship</span>
-                </div>
-              </div>
-
-              <div className="benefit-item flex items-start gap-3">
-                <Award className="benefit-icon text-amber-400 shrink-0" size={24} />
-                <div className="benefit-text">
-                  <span className="b-title text-white font-bold text-sm block">Media</span>
-                  <span className="b-desc text-amber-500/80 text-xs block">Recognition</span>
-                </div>
-              </div>
-
-              <div className="benefit-item flex items-start gap-3">
-                <MapPin className="benefit-icon text-amber-400 shrink-0" size={24} />
-                <div className="benefit-text">
-                  <span className="b-title text-white font-bold text-sm block">Grand Finale</span>
-                  <span className="b-desc text-amber-500/80 text-xs block">in Delhi</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          </div>
-
-        {/* Floating Action Buttons */}
-        <div className="floating-socials animate-fade-in-delay-4 z-50">
-          
-          {/* WhatsApp Button */}
-          <div className="relative group flex items-center justify-end">
-            <span className="absolute right-14 scale-0 group-hover:scale-100 transition-all duration-200 bg-[#0f001c]/95 text-[#ffd700] border border-amber-500/30 text-xs px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg select-none pointer-events-none">
-              Chat on WhatsApp
-            </span>
-            <a 
-              href="https://wa.me/918340714813" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="floating-btn flex items-center justify-center bg-[#25D366]/10 hover:bg-[#25D366] text-[#25D366] hover:text-white border-[#25D366]/40 hover:border-[#25D366]" 
-              aria-label="Chat on WhatsApp"
-            >
-              <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.517 2.266 2.27 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.5-5.739-1.453L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.97C16.59 1.966 14.122 1.05 11.62 1.05c-5.45 0-9.875 4.37-9.879 9.799-.002 1.802.484 3.562 1.408 5.113l-.955 3.49 3.633-.941c1.554.838 3.033 1.272 4.814 1.272zm8.254-7.235c-.344-.172-2.037-1.002-2.349-1.115-.312-.113-.539-.17-.766.172-.227.341-.877 1.115-1.076 1.342-.198.228-.396.256-.74.085-.344-.173-1.452-.536-2.766-1.706-1.022-.912-1.711-2.038-1.912-2.383-.2-.344-.022-.53.149-.701.154-.154.344-.401.516-.602.172-.201.23-.344.344-.573.114-.229.057-.429-.028-.602-.086-.173-.766-1.844-1.05-2.529-.276-.665-.553-.574-.766-.585-.199-.01-.426-.011-.653-.011-.227 0-.596.085-.908.429-.312.344-1.192 1.166-1.192 2.842 0 1.677 1.22 3.298 1.39 3.527.17.229 2.4 3.665 5.812 5.112.812.344 1.446.549 1.94.707.815.259 1.558.223 2.146.135.655-.098 2.037-.833 2.321-1.636.284-.803.284-1.491.199-1.636-.086-.145-.313-.229-.656-.401z"/>
-              </svg>
-            </a>
-          </div>
-
-          {/* Phone Call Button */}
-          <div className="relative group flex items-center justify-end">
-            <span className="absolute right-14 scale-0 group-hover:scale-100 transition-all duration-200 bg-[#0f001c]/95 text-[#ffd700] border border-amber-500/30 text-xs px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg select-none pointer-events-none">
-              Call Now
-            </span>
-            <a 
-              href="tel:+918340714813" 
-              className="floating-btn flex items-center justify-center bg-blue-500/10 hover:bg-blue-600 text-blue-500 hover:text-white border-blue-500/40 hover:border-blue-600" 
-              aria-label="Call Now"
-            >
-              <Phone size={22} />
-            </a>
-          </div>
-
-          {/* AI Selfie Camera Button */}
-          <div className="relative group flex items-center justify-end">
-            <span className="absolute right-14 scale-0 group-hover:scale-100 transition-all duration-200 bg-[#0f001c]/95 text-[#ffd700] border border-amber-500/30 text-xs px-3 py-1.5 rounded-lg whitespace-nowrap shadow-lg select-none pointer-events-none">
-              AI Selfie Camera
-            </span>
-            <button 
-              onClick={() => setIsSelfieOpen(true)}
-              className="floating-btn flex items-center justify-center bg-amber-500/10 hover:bg-gradient-to-r hover:from-amber-400 hover:to-yellow-600 text-amber-500 hover:text-purple-950 border-amber-500/40 hover:border-amber-400 cursor-pointer" 
-              aria-label="AI Selfie Camera"
-            >
-              <Camera size={22} />
-            </button>
-          </div>
-
-        </div>
-      </section>
-
-      {/* About Section */}
-      <section id="about" className="about">
-        <div className="container">
-          <div className="about-grid">
-            <div className="about-text">
-              <h2 className="section-title" style={{textAlign: 'left'}}>About Miss Bharat™</h2>
-              <p>Miss Bharat™ is a national beauty pageant celebrating beauty, intelligence, talent, and social impact. It empowers women across India to become leaders, role models, and ambassadors of positive change.</p>
-              <p>We aim to provide women across India with opportunities to shine in fashion, modeling, leadership, and personal growth. Our mission is to inspire the next generation of women to embrace their individuality, confidence, and dreams while representing modern India with pride and elegance.</p>
-              
-              <ul className="feature-list" style={{marginTop: '30px'}}>
-                <li><CheckCircle2 className="feature-icon" /> Professional Photoshoot & Ramp Walk Training</li>
-                <li><CheckCircle2 className="feature-icon" /> Expert Grooming Sessions</li>
-                <li><CheckCircle2 className="feature-icon" /> Participation in Miss Bharat Award 2026</li>
-              </ul>
-            </div>
-            <div className="about-image">
-              <img 
-                src={smallbanner} 
-                alt="About Miss Bharat" 
-                loading="lazy"
-                className="w-full h-full object-cover rounded-3xl shadow-2xl" 
-                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '1.5rem', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Participate Section */}
-      {/* Why Join Miss Bharat™ 2026 Section */}
-      <section id="why-participate" className="info-section">
-        <div className="container">
-          <h2 className="section-title">Why Join Miss Bharat™ 2026?</h2>
-          <div className="grid-3">
-            <div className="card">
-              <Star size={40} className="card-icon" />
-              <h3>National Recognition</h3>
-              <p>Gain immense visibility on a prestigious national stage with official recognition across India.</p>
-            </div>
-            <div className="card">
-              <Sparkles size={40} className="card-icon" />
-              <h3>Professional Grooming Sessions</h3>
-              <p>Learn from top industry experts, ramp walk choreographers, and professional beauty mentors.</p>
-            </div>
-            <div className="card">
-              <TrendingUp size={40} className="card-icon" />
-              <h3>Personality Development</h3>
-              <p>Enhance your public speaking, etiquette, confidence, and leadership presence for a successful career.</p>
-            </div>
-            <div className="card">
-              <Camera size={40} className="card-icon" />
-              <h3>Media Exposure</h3>
-              <p>Get featured in leading fashion magazines, digital media campaigns, and press coverage across the country.</p>
-            </div>
-            <div className="card">
-              <Award size={40} className="card-icon" />
-              <h3>Confidence Building</h3>
-              <p>Overcome stage fear, build robust self-esteem, and discover your true voice and potential.</p>
-            </div>
-            <div className="card">
-              <Globe size={40} className="card-icon" />
-              <h3>Networking Opportunities</h3>
-              <p>Build lasting relationships with elite designers, talent scouts, casting directors, and peer contestants.</p>
-            </div>
-            <div className="card">
-              <Crown size={40} className="card-icon" />
-              <h3>Women Empowerment</h3>
-              <p>Step into a dedicated space designed to support female leaders, change-makers, and visionaries.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-
-      {/* Prizes Section */}
-      <section id="prizes" className="about">
-        <div className="container">
-          <h2 className="section-title">Grand Prizes & Awards</h2>
-          <div className="about-grid" style={{gridTemplateColumns: '1fr 1.5fr'}}>
-            <div className="about-image">
-              <img 
-                src={virtus} 
-                alt="Volkswagen Virtus Grand Prize" 
-                loading="lazy"
-                className="w-full h-full object-cover rounded-3xl shadow-2xl" 
-                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '1.5rem', boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}
-              />
-            </div>
-            <div className="about-text">
-              <h3 style={{fontSize: '2rem', marginBottom: '20px', color: 'var(--gold-dark)'}}>1st Prize: Volkswagen Virtus</h3>
-              <p style={{fontSize: '1.2rem', marginBottom: '30px'}}>The headline grand prize for Miss Bharat Award 2026 - premium German engineering and standout style for our crowned winner.</p>
-              
-              <ul className="feature-list">
-                <li><Award className="feature-icon" /> <strong>Winner Crown & Trophy:</strong> Signature ceremony moment & ambassador recognition</li>
-                <li><Award className="feature-icon" /> <strong>Cash Prizes:</strong> Rewarding the excellence of our finalists</li>
-                <li><Award className="feature-icon" /> <strong>Brand Endorsements:</strong> Curated introductions with aligned partner labels</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Video Gallery Section */}
-      <section id="gallery" className="video-section">
-        <div className="container">
-          <div style={{textAlign: 'center', marginBottom: '50px'}}>
-            <h2 className="section-title" style={{marginBottom: '15px'}}>Miss Bharat™ Video Gallery</h2>
-            <p style={{fontSize: '1.3rem', color: 'var(--gray)', fontStyle: 'italic'}}>Experience the Glamour, Confidence and Journey of India's Most Prestigious Beauty Pageant</p>
-          </div>
-          
-          <div className="video-grid">
-            <div className="video-card">
-              <video
-                src="https://ik.imagekit.io/ew7ar5inl/public/video01.mp4?updatedAt=1781678065333"
-                autoPlay
-                muted
-                loop
-                controls
-                playsInline
-                preload="metadata"
-              >
-                Your browser does not support the video tag.
-              </video>
-            </div>
-            <div className="video-card">
-              <video
-                src="https://ik.imagekit.io/ew7ar5inl/public/video02.mp4?updatedAt=1781678063580"
-                autoPlay
-                muted
-                loop
-                controls
-                playsInline
-                preload="metadata"
-              >
-                Your browser does not support the video tag.
-              </video>
-            </div>
+            {/* Notification Badge */}
+            {badgeVisible && (
+              <span className="faq-floating-avatar-badge animate-pulse">
+                3 Popular Questions
+              </span>
+            )}
             
-            <div className="video-content-block">
-              <h3 style={{fontSize: '2rem', marginBottom: '20px', color: 'var(--gold-dark)'}}>Experience Miss Bharat™ in Action</h3>
-              <p style={{marginBottom: '20px', fontSize: '1.1rem', color: 'var(--gray)', lineHeight: '1.8'}}>
-                Watch real moments from auditions, runway walks, grooming sessions, and crowning celebrations. Discover the confidence, talent, and transformation that define the Miss Bharat™ journey.
-              </p>
-              <ul className="feature-list" style={{marginBottom: '30px'}}>
-                <li><CheckCircle2 className="feature-icon" /> National Level Beauty Pageant</li>
-                <li><CheckCircle2 className="feature-icon" /> Professional Grooming Sessions</li>
-                <li><CheckCircle2 className="feature-icon" /> Grand Finale & Crown Ceremony</li>
-                <li><CheckCircle2 className="feature-icon" /> Media Coverage & Recognition</li>
-                <li><CheckCircle2 className="feature-icon" /> Women Empowerment Platform</li>
-              </ul>
-              <a href={applyLink} className="btn btn-primary">Apply Now <ChevronRight size={20} /></a>
-            </div>
-          </div>
+            {/* Tooltip: displays on idle or on hover */}
+            {isIdleTooltipVisible && !isHovered && (
+              <span className="faq-floating-avatar-tooltip">
+                👋 Need help? Ask Miss Bharat Assistant
+              </span>
+            )}
+            {isHovered && (
+              <span className="faq-floating-avatar-tooltip">
+                Need help? Ask Miss Bharat Assistant
+              </span>
+            )}
+          </button>
         </div>
-      </section>
+      )}
 
-      {/* Photo Gallery Section */}
-      <section id="photo-gallery" className="photo-gallery-section">
-        <div className="container">
-          <div style={{textAlign: 'center', marginBottom: '50px'}}>
-            <h2 className="section-title" style={{marginBottom: '15px'}}>Miss Bharat™ Photo Gallery</h2>
-            <p style={{fontSize: '1.3rem', color: 'var(--gray)', fontStyle: 'italic'}}>Capturing the Moments of Beauty, Talent and Success</p>
-          </div>
-
-          <div className="gallery-grid">
-            {galleryImages.map((src, index) => (
-              <div 
-                key={index} 
-                className="gallery-item animate-fade-in" 
-                onClick={() => openLightbox(index)}
+      {/* Upgraded Floating FAQ Assistant Chat Panel */}
+      <div 
+        className={`faq-assistant-overlay ${isAssistantOpen ? 'active' : ''}`}
+      >
+        <div 
+          className="faq-assistant-panel"
+          ref={panelRef}
+        >
+          {/* Header with Minimize and Close actions */}
+          <div className="faq-panel-header">
+            <div>
+              <h3>💬 Miss Bharat Live Assistant</h3>
+              <p>Your guide to Miss Bharat™ 2026</p>
+            </div>
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <button 
+                className="faq-panel-minimize-btn"
+                onClick={() => handleCloseAssistant()}
+                aria-label="Minimize Assistant"
               >
-                <img src={src} alt={`Miss Bharat Gallery ${index + 1}`} loading="lazy" />
-              </div>
-            ))}
-          </div>
-
-          <div className="gallery-content-block" style={{marginTop: '50px', textAlign: 'center', background: 'var(--white)', padding: '40px', borderRadius: '20px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)', border: '2px solid var(--gold)'}}>
-            <h3 style={{fontSize: '2rem', marginBottom: '15px', color: 'var(--purple)'}}>Memories of Miss Bharat™</h3>
-            <p style={{fontSize: '1.1rem', color: 'var(--gray)', maxWidth: '800px', margin: '0 auto 30px', lineHeight: '1.6'}}>
-              Explore unforgettable moments from auditions, grooming sessions, award ceremonies, and the journey of our inspiring contestants.
-            </p>
-            <a href={applyLink} className="btn btn-primary" style={{transform: 'scale(1.05)'}}>Apply Now <ChevronRight size={20} /></a>
-          </div>
-        </div>
-      </section>
-
-      {/* Eligibility Section */}
-      <section id="eligibility" className="info-section">
-        <div className="container">
-          <h2 className="section-title">Eligibility Criteria</h2>
-          <div className="grid-3">
-            <div className="card">
-              <Calendar size={40} className="card-icon" />
-              <h3>Age & Marital Status</h3>
-              <p>Girls Age: 16–28 Years (Open to All).</p>
-            </div>
-            <div className="card">
-              <Star size={40} className="card-icon" />
-              <h3>Experience</h3>
-              <p>Beginners & Freshers are welcome. No prior modeling experience is mandatory.</p>
-            </div>
-            <div className="card">
-              <MapPin size={40} className="card-icon" />
-              <h3>Location</h3>
-              <p>Apply from any city in India. No height restriction.</p>
-            </div>
-          </div>
-          
-          <div style={{textAlign: 'center', marginTop: '50px'}}>
-             <div style={{display: 'inline-block', background: 'var(--white)', padding: '20px 40px', borderRadius: '15px', boxShadow: '0 10px 30px rgba(0,0,0,0.05)', border: '2px solid var(--gold)'}}>
-                <h3 style={{marginBottom: '10px', color: 'var(--purple)'}}>Registration Fee: ₹999 Only</h3>
-                <p style={{color: 'var(--gray)'}}>No Hidden Charges • No Grooming Fees</p>
-             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Frequently Asked Questions (FAQ) Section */}
-      <section id="faq" className="about" style={{ background: 'var(--gray-light)' }}>
-        <div className="container">
-          <h2 className="section-title">Frequently Asked Questions</h2>
-          <div style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {[
-              {
-                q: "Who can apply for Miss Bharat™ 2026?",
-                a: "Women across India who meet the eligibility criteria can apply."
-              },
-              {
-                q: "Is there any registration fee?",
-                a: "No, registration is currently free."
-              },
-              {
-                q: "What are the competition stages?",
-                a: "Virtual Audition → State Level Round → National Finale in Delhi."
-              },
-              {
-                q: "Will participants receive certificates?",
-                a: "Yes, selected participants will receive recognition and certificates."
-              }
-            ].map((faq, index) => (
-              <div 
-                key={index} 
-                style={{ 
-                  background: 'var(--white)', 
-                  padding: '25px 30px', 
-                  borderRadius: '15px', 
-                  boxShadow: '0 5px 15px rgba(0,0,0,0.02)',
-                  borderLeft: '4px solid var(--gold)',
-                  textAlign: 'left'
-                }}
+                <Minus size={16} />
+              </button>
+              <button 
+                className="faq-panel-close"
+                onClick={() => handleCloseAssistant()}
+                aria-label="Close FAQ Assistant"
               >
-                <h3 style={{ fontSize: '1.25rem', marginBottom: '10px', color: 'var(--purple-dark)', fontWeight: '700' }}>{faq.q}</h3>
-                <p style={{ color: 'var(--gray)', fontSize: '1.05rem', lineHeight: '1.6', margin: '0' }}>{faq.a}</p>
+                <X size={18} />
+              </button>
+            </div>
+          </div>
+
+          {/* Body content based on viewMode */}
+          {viewMode === 'onboarding' ? (
+            <div className="faq-onboarding-container">
+              {/* Avatar header */}
+              <div className="faq-avatar-wrapper">
+                <div className="faq-avatar">
+                  <Sparkles size={16} />
+                </div>
+                <span className="faq-avatar-name">Miss Bharat AI Guide</span>
               </div>
+
+              {isTyping ? (
+                /* Typing animation screen */
+                <div className="faq-chat-bubble faq-typing-bubble faq-animate-bubble">
+                  <div className="faq-typing-dots">
+                    <span className="faq-dot"></span>
+                    <span className="faq-dot"></span>
+                    <span className="faq-dot"></span>
+                  </div>
+                </div>
+              ) : (
+                /* Welcome Onboarding Screen */
+                <>
+                  <div className="faq-chat-bubble faq-welcome-bubble faq-animate-bubble">
+                    <p className="faq-welcome-text">Hello 👋</p>
+                    <p className="faq-welcome-text" style={{ marginTop: '8px' }}>Welcome to Miss Bharat™ 2026.</p>
+                    <p className="faq-welcome-text" style={{ marginTop: '8px' }}>I can instantly help you with:</p>
+                    <ul className="faq-welcome-list">
+                      <li className="faq-welcome-item"><span className="faq-welcome-bullet">•</span> Registration Process</li>
+                      <li className="faq-welcome-item"><span className="faq-welcome-bullet">•</span> Eligibility Criteria</li>
+                      <li className="faq-welcome-item"><span className="faq-welcome-bullet">•</span> Age Limit</li>
+                      <li className="faq-welcome-item"><span className="faq-welcome-bullet">•</span> Audition Process</li>
+                      <li className="faq-welcome-item"><span className="faq-welcome-bullet">•</span> Required Documents</li>
+                      <li className="faq-welcome-item"><span className="faq-welcome-bullet">•</span> Participation Fees</li>
+                      <li className="faq-welcome-item"><span className="faq-welcome-bullet">•</span> Winner Benefits</li>
+                      <li className="faq-welcome-item"><span className="faq-welcome-bullet">•</span> Certificates & Awards</li>
+                      <li className="faq-welcome-item"><span className="faq-welcome-bullet">•</span> Rules & Regulations</li>
+                    </ul>
+                    <p className="faq-welcome-text" style={{ marginTop: '8px' }}>Please choose a topic below or search your question.</p>
+                  </div>
+
+                  {/* Quick Action Chips */}
+                  <div className="faq-chips-section faq-animate-bubble" style={{ animationDelay: '0.1s' }}>
+                    <p className="faq-chips-title">Quick Topics:</p>
+                    <div className="faq-chips-container">
+                      <button 
+                        className="faq-chip"
+                        onClick={() => handleSelectFaq(0)} /* Q1: Registration Process */
+                      >
+                        📄 Registration Process
+                      </button>
+                      <button 
+                        className="faq-chip"
+                        onClick={() => handleSelectFaq(2)} /* Q3: Eligibility Criteria */
+                      >
+                        🎯 Eligibility Criteria
+                      </button>
+                      <button 
+                        className="faq-chip"
+                        onClick={() => handleSelectFaq(4)} /* Q5: Audition Process */
+                      >
+                        🎤 Audition Process
+                      </button>
+                      <button 
+                        className="faq-chip"
+                        onClick={() => handleSelectFaq(5)} /* Q6: Required Documents */
+                      >
+                        📑 Required Documents
+                      </button>
+                      <button 
+                        className="faq-chip"
+                        onClick={() => handleSelectFaq(12)} /* Q13: Winner Benefits */
+                      >
+                        🏆 Winner Benefits
+                      </button>
+                      <button 
+                        className="faq-chip"
+                        onClick={() => handleSelectFaq(8)} /* Q9: Certificates & Awards */
+                      >
+                        🎁 Awards & Certificates
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Two Buttons */}
+                  <div className="faq-onboarding-actions faq-animate-bubble" style={{ animationDelay: '0.2s' }}>
+                    <button 
+                      className="btn btn-primary faq-onboarding-btn-primary"
+                      onClick={() => {
+                        setViewMode('chat');
+                        sessionStorage.setItem('miss_faq_view_mode', 'chat');
+                        setIsDropdownOpen(false);
+                      }}
+                    >
+                      Start Asking Questions
+                    </button>
+                    <button 
+                      className="btn btn-secondary faq-onboarding-btn-secondary"
+                      onClick={() => {
+                        setViewMode('chat');
+                        sessionStorage.setItem('miss_faq_view_mode', 'chat');
+                        setIsDropdownOpen(false);
+                      }}
+                    >
+                      Skip & Open FAQ
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          ) : (
+            /* Chatbot interface view */
+            <>
+              {/* Chat feed containing conversation bubbles */}
+              <div className="faq-chat-feed" ref={chatFeedRef}>
+                {selectedFaqIndex === null ? (
+                  /* Placeholder when no question is selected yet */
+                  <div className="faq-chat-placeholder">
+                    <Sparkles className="faq-placeholder-icon" size={32} />
+                    <p>Select a question from the dropdown list below or search to find answers.</p>
+                  </div>
+                ) : (
+                  /* Conversation UI: only the active question and answer are displayed */
+                  <>
+                    <div className="faq-avatar-wrapper" style={{ alignSelf: 'flex-end', flexDirection: 'row-reverse' }}>
+                      <div className="faq-avatar" style={{ background: 'var(--purple-dark)', color: 'var(--white)', border: '1px solid var(--gold)' }}>
+                        <span style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>U</span>
+                      </div>
+                      <span className="faq-avatar-name">You</span>
+                    </div>
+                    <div className="faq-chat-bubble faq-chat-user faq-animate-bubble">
+                      {faqs[selectedFaqIndex]?.q}
+                    </div>
+
+                    <div className="faq-avatar-wrapper" style={{ marginTop: '10px' }}>
+                      <div className="faq-avatar">
+                        <Sparkles size={16} />
+                      </div>
+                      <span className="faq-avatar-name">Miss Bharat AI Guide</span>
+                    </div>
+                    
+                    {isFaqAnswerTyping ? (
+                      /* Typing indicator before showing the answer */
+                      <div className="faq-chat-bubble faq-typing-bubble faq-animate-bubble">
+                        <div className="faq-typing-dots">
+                          <span className="faq-dot"></span>
+                          <span className="faq-dot"></span>
+                          <span className="faq-dot"></span>
+                        </div>
+                      </div>
+                    ) : (
+                      /* Loaded Answer Bubble */
+                      <div className="faq-chat-bubble faq-chat-agent faq-animate-bubble">
+                        {faqs[selectedFaqIndex]?.a}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+
+              {/* Upgraded Search & Searchable Dropdown sticky area */}
+              <div className="faq-search-container-upgraded">
+                {/* Helper text */}
+                <p className="faq-helper-text" style={{ fontSize: '0.9rem', color: 'var(--gray)', margin: '0 0 12px 0', textAlign: 'center', fontWeight: '500', fontFamily: 'var(--font-body)' }}>
+                  Type a keyword or select a question below.
+                </p>
+
+                <div 
+                  className={`faq-dropdown-container ${isDropdownOpen ? 'open' : ''}`}
+                  ref={dropdownRef}
+                >
+                  {/* Dropdown Overlay: Scrollable options filtered by keyword */}
+                  <div className="faq-dropdown-overlay">
+                    <div className="faq-dropdown-list" role="listbox">
+                      {faqs
+                        .map((faq, index) => ({ faq, index }))
+                        .filter(({ faq }) => faq.q.toLowerCase().includes(searchQuery.toLowerCase()))
+                        .map(({ faq, index }) => (
+                          <button
+                            key={index}
+                            role="option"
+                            aria-selected={selectedFaqIndex === index}
+                            className={`faq-dropdown-item ${selectedFaqIndex === index ? 'active' : ''}`}
+                            onClick={() => {
+                              handleSelectFaq(index);
+                              setSearchQuery("");
+                            }}
+                          >
+                            {faq.q}
+                          </button>
+                        ))
+                      }
+                      {faqs.filter(faq => faq.q.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
+                        <div className="faq-dropdown-no-results">
+                          No matching questions. Try searching for "Registration", "Eligibility", "Age Limit", etc.
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* 52px Search Input (Trigger for searchable dropdown) */}
+                  <div className="faq-search-input-wrapper">
+                    <Search className="faq-search-icon-left" size={20} />
+                    <input 
+                      type="text" 
+                      placeholder="🔍 Search by keyword (Registration, Eligibility, Age Limit...)"
+                      value={searchQuery}
+                      onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        setIsDropdownOpen(true);
+                      }}
+                      onFocus={() => setIsDropdownOpen(true)}
+                      onClick={() => setIsDropdownOpen(true)}
+                      className="faq-search-input-field"
+                    />
+                    <button 
+                      className="faq-dropdown-toggle-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsDropdownOpen(!isDropdownOpen);
+                      }}
+                      aria-label="Toggle Question List"
+                    >
+                      <ChevronRight 
+                        size={20} 
+                        className="faq-dropdown-arrow-icon" 
+                        style={{ transform: isDropdownOpen ? 'rotate(-90deg)' : 'rotate(90deg)' }} 
+                      />
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* SEO friendly visuals-hidden block (no display: none) mapping all 20 FAQs */}
+          <div className="seo-faq-crawler" aria-hidden="true">
+            {faqs.map((faq, idx) => (
+              <article key={idx}>
+                <h2>{faq.q}</h2>
+                <div>{faq.a}</div>
+              </article>
             ))}
           </div>
         </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="cta-banner">
-        <div className="container">
-          <h2>Your Journey to the Crown Begins Here</h2>
-          <p>Take the first step toward the runway, the crown, and a career in modeling and fashion.</p>
-          <a href={applyLink} className="btn btn-primary" style={{transform: 'scale(1.1)'}}>Apply for Miss Bharat™ 2026</a>
-        </div>
-      </section>
+      </div>
 
       {/* Footer */}
       <footer id="contact" className="footer">
@@ -603,11 +859,11 @@ function App() {
             <div>
               <h4 style={{ color: 'var(--gold)', fontSize: '1.25rem', marginBottom: '20px', fontWeight: '700' }}>Quick Links</h4>
               <ul className="footer-links">
-                <li><a href="#" aria-label="Home page">Home</a></li>
-                <li><a href="#about" aria-label="About Miss Bharat pageant">About Miss Bharat</a></li>
-                <li><a href="#eligibility" aria-label="Check Eligibility criteria">Eligibility</a></li>
-                <li><a href="#prizes" aria-label="Grand Prizes and Awards information">Prizes</a></li>
-                <li><a href="#gallery" aria-label="Video and Photo Gallery">Gallery</a></li>
+                <li><a href="/" aria-label="Home page">Home</a></li>
+                <li><a href="/#about" aria-label="About Miss Bharat pageant">About Miss Bharat</a></li>
+                <li><a href="/#eligibility" aria-label="Check Eligibility criteria">Eligibility</a></li>
+                <li><a href="/#prizes" aria-label="Grand Prizes and Awards information">Prizes</a></li>
+                <li><a href="/#gallery" aria-label="Video and Photo Gallery">Gallery</a></li>
                 <li><a href="#faq" aria-label="Frequently Asked Questions">FAQ</a></li>
                 <li><a href={applyLink} target="_blank" rel="noopener noreferrer" aria-label="Apply Now registration form">Apply Now</a></li>
                 <li><a href="#contact" aria-label="Contact Us support details">Contact Us</a></li>
@@ -688,23 +944,15 @@ function App() {
           </div>
         </div>
       </footer>
-
-      {/* Lightbox Modal */}
-      {lightboxOpen && (
-        <div className="lightbox" onClick={closeLightbox}>
-          <button className="lightbox-close" onClick={closeLightbox} aria-label="Close Gallery"><X size={32} /></button>
-          <button className="lightbox-nav prev" onClick={prevLightboxImage} aria-label="Previous Image"><ChevronLeft size={36} /></button>
-          
-          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
-            <img src={galleryImages[selectedImageIndex]} alt={`Gallery View ${selectedImageIndex + 1}`} />
-          </div>
-
-          <button className="lightbox-nav next" onClick={nextLightboxImage} aria-label="Next Image"><ChevronRight size={36} /></button>
-        </div>
-      )}
-      {/* Selfie Camera Modal */}
-      <SelfieCamera isOpen={isSelfieOpen} onClose={() => setIsSelfieOpen(false)} />
     </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
   );
 }
 
